@@ -4,25 +4,41 @@
 '       v1.0 2026-06-25
 '--------------------------------------------------------------------------------------------------
 
+Imports System.Runtime.InteropServices
+Imports SysOptimizer.API.ntdll
+
 Public NotInheritable Class OSVersion
 
-   Private Shared ReadOnly ver As Version = Environment.OSVersion.Version
+   Private Shared Function QueryVersion() As RTL_OSVERSIONINFOEX
+      Dim v As New RTL_OSVERSIONINFOEX()
+      v.dwOSVersionInfoSize = CUInt(Marshal.SizeOf(v))
+      RtlGetVersion(v)
+      Return v
+   End Function
+
+   Private Shared ReadOnly ver As RTL_OSVERSIONINFOEX = QueryVersion()
 
    Public Shared ReadOnly Property Major As Integer
       Get
-         Return ver.Major
+         Return CInt(ver.dwMajorVersion)
       End Get
    End Property
 
    Public Shared ReadOnly Property Minor As Integer
       Get
-         Return ver.Minor
+         Return CInt(ver.dwMinorVersion)
       End Get
    End Property
 
    Public Shared ReadOnly Property Build As Integer
       Get
-         Return ver.Build
+         Return CInt(ver.dwBuildNumber)
+      End Get
+   End Property
+
+   Public Shared ReadOnly Property ServicePack As String
+      Get
+         Return ver.szCSDVersion
       End Get
    End Property
 

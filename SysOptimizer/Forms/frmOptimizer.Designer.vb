@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class Form1
+Partial Class frmOptimizer
    Inherits System.Windows.Forms.Form
 
    'Form overrides dispose to clean up the component list.
@@ -23,10 +23,12 @@ Partial Class Form1
    <System.Diagnostics.DebuggerStepThrough()>
    Private Sub InitializeComponent()
       lvOptimizer = New ListView()
+      ColumnHeader1 = New ColumnHeader()
       SuspendLayout()
       ' 
       ' lvOptimizer
       ' 
+      lvOptimizer.Columns.AddRange(New ColumnHeader() {ColumnHeader1})
       lvOptimizer.Dock = DockStyle.Fill
       lvOptimizer.Location = New Point(0, 0)
       lvOptimizer.Name = "lvOptimizer"
@@ -35,17 +37,18 @@ Partial Class Form1
       lvOptimizer.UseCompatibleStateImageBehavior = False
       lvOptimizer.View = View.Details
       ' 
-      ' Form1
+      ' frmOptimizer
       ' 
       AutoScaleDimensions = New SizeF(7F, 15F)
       AutoScaleMode = AutoScaleMode.Font
       ClientSize = New Size(800, 450)
       Controls.Add(lvOptimizer)
-      Name = "Form1"
+      Name = "frmOptimizer"
       Text = "Form1"
       ResumeLayout(False)
    End Sub
 
    Friend WithEvents lvOptimizer As ListView
+   Friend WithEvents ColumnHeader1 As ColumnHeader
 
 End Class

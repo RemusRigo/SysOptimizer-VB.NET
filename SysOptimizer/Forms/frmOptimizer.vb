@@ -1,5 +1,5 @@
-﻿Public Class Form1
-
+﻿Public Class frmOptimizer
+   Dim log As New Logger(appName)
    Dim grp As ListViewGroup = Nothing
 
    '-----------------------------------------------------------------------------------------------
@@ -13,8 +13,8 @@
    ' Add ListView item
    Private Sub LV_AddItem(name As String, isChecked As Boolean)
       Dim item As New ListViewItem(name)
-      item.SubItems.Add("")
-      item.SubItems.Add("")
+      'item.SubItems.Add("")
+      ' item.SubItems.Add("")
       item.Checked = isChecked
       item.Tag = 0
       item.Group = grp
@@ -28,11 +28,11 @@
       lvOptimizer.Items.Clear()
       lvOptimizer.Groups.Clear()
 
-      If IsAppElevated() Then
-         LV_AddGroup("Services")
-         LV_AddItem("Print Spooler", True)
-         LV_AddItem("Windows Search", True)
-      End If
+      'If IsAppElevated() Then
+      LV_AddGroup("Services")
+      LV_AddItem("Print Spooler", True)
+      LV_AddItem("Windows Search", True)
+      'End If
 
       'ResizeColumns()
       lvOptimizer.EndUpdate()
@@ -60,7 +60,7 @@
    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
       BuildOptions()
 
-      Dim log As New Logger(appName)
+
       log.Msg.Info("test/starting app")
    End Sub
 End Class
