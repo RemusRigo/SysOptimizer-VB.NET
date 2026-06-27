@@ -10,6 +10,11 @@ Public Class frmOptimizer
    Dim log As New Logger(appName)
    Dim grp As ListViewGroup = Nothing
 
+   Private Class LV_CheckBoxData
+      Public Property HasCheckBox As Boolean
+      Public Property CheckState As Boolean
+      Public Property Display As String
+   End Class
    '-----------------------------------------------------------------------------------------------
    ' Add ListView Group
    Private Sub LV_AddGroup(name As String)
@@ -19,12 +24,15 @@ Public Class frmOptimizer
 
    '-----------------------------------------------------------------------------------------------
    ' Add ListView item
-   Private Sub LV_AddItem(name As String, isChecked As Boolean)
+   Private Sub LV_AddItem(name As String, isChecked As Boolean, Optional hasCheckBox As Boolean = False, Optional CheckBoxIsChecked As Boolean = False, Optional CheckBoxText As String = "On/Off")
       Dim item As New ListViewItem(name)
-      'item.SubItems.Add("")
-      ' item.SubItems.Add("")
+      item.SubItems.Add("")
       item.Checked = isChecked
-      item.Tag = 0
+      item.Tag = New LV_CheckBoxData With {
+         .HasCheckBox = hasCheckBox,
+         .CheckState = CheckBoxIsChecked,
+         .Display = CheckBoxText
+      }
       item.Group = grp
       lvOptimizer.Items.Add(item)
    End Sub
@@ -36,17 +44,17 @@ Public Class frmOptimizer
       lvOptimizer.Items.Clear()
       lvOptimizer.Groups.Clear()
 
-      If IsAppElevated() Then
-         LV_AddGroup("Clean /Repair / Rebuild")
-         LV_AddItem("Windows Search: Indexing DB", True)
-      End If
+      ' If IsAppElevated() Then
+      LV_AddGroup("Clean /Repair / Rebuild")
+      LV_AddItem("Windows Search: Indexing DB", False)
+      ' End If
 
-      If IsAppElevated() Then
-         LV_AddGroup("Services")
-         LV_AddItem("Windows Search", True)
-      End If
+      'If IsAppElevated() Then
+      LV_AddGroup("Services")
+      LV_AddItem("Windows Search", True, True, True, "On/Off")
+      'End If
 
-      ResizeLVColumns(lvOptimizer)
+      'ResizeLVColumns(lvOptimizer)
       lvOptimizer.EndUpdate()
    End Sub
 
@@ -89,6 +97,8 @@ Public Class frmOptimizer
                         log.Msg.Error("Reg: Windows Search: Indexing DB reset: not ok")
                      End If
                      StartService("wsearch")
+                     pbActions.Value += 1
+
                End Select
 
             '======================================================================================
@@ -97,6 +107,8 @@ Public Class frmOptimizer
 
                   '--------------------------------------------------------------------------------
                   Case "Windows Search"
+                     StopService("wsearch")
+                     pbActions.Value += 1
 
                End Select
 
@@ -105,15 +117,23 @@ Public Class frmOptimizer
    End Sub
 
    Private Sub frmOptimizer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-      BuildOptions()
+      lvOptimizer.View = View.Details
+      lvOptimizer.OwnerDraw = True
+      lvOptimizer.FullRowSelect = True
+
+      AddHandler lvOptimizer.DrawColumnHeader, AddressOf lvOptimizer_DrawColumnHeader
+      AddHandler lvOptimizer.DrawItem, AddressOf lvOptimizer_DrawItem
+      AddHandler lvOptimizer.DrawSubItem, AddressOf lvOptimizer_DrawSubItem
+
       pbActions = New rrProgressBar()
       pbActions.Dock = DockStyle.None
       pbActions.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
       pbActions.Location = New Point(3, 417)
       pbActions.Size = New Size(745, 20)
-      'pbActioms.BarColor = DarkenColor(tvOptions.BackColor, 15)
-      'pbActioms.BarColorDone = DarkenColor(tvOptions.BackColor, 30)
       Me.Controls.Add(pbActions)
+
+      BuildOptions()
+
    End Sub
 
    Private Async Sub btnProcess_Click(sender As Object, e As EventArgs) Handles btnProcess.Click
@@ -124,13 +144,53 @@ Public Class frmOptimizer
          End If
       Next
 
-      MessageBox.Show(itemsToProcess.Count)
+      pbActions.Maximum = itemsToProcess.Count
 
       Try
-         ' 2. Pass the gathered items to the background worker
          Await Task.Run(Sub() ProcessActions(itemsToProcess))
       Finally
-         'toolBtnPurge.Enabled = True
+
       End Try
    End Sub
+
+   Private Sub lvOptimizer_DrawColumnHeader(sender As Object, e As DrawListViewColumnHeaderEventArgs) Handles lvOptimizer.DrawColumnHeader
+      e.DrawDefault = True
+   End Sub
+
+   Private Sub lvOptimizer_DrawItem(sender As Object, e As DrawListViewItemEventArgs) Handles lvOptimizer.DrawItem
+      'e.DrawDefault = True
+   End Sub
+
+   Private Sub lvOptimizer_DrawSubItem(sender As Object, e As DrawListViewSubItemEventArgs) Handles lvOptimizer.DrawSubItem
+      Dim data = TryCast(e.Item.Tag, LV_CheckBoxData)
+      If data Is Nothing Then
+         e.DrawDefault = True
+         Return
+      End If
+
+      ' Only column 2
+      If e.ColumnIndex = 1 AndAlso data.HasCheckBox Then
+         Dim g = e.Graphics
+         Dim bounds = e.Bounds
+
+         Dim cbSize As Integer = 14
+         Dim x As Integer = bounds.X + 4
+         Dim y As Integer = bounds.Y + (bounds.Height - cbSize) \ 2
+
+         ControlPaint.DrawCheckBox(g,
+             New Rectangle(x, y, cbSize, cbSize),
+             If(data.CheckState, ButtonState.Checked, ButtonState.Normal)
+         )
+
+         ' Optional text next to checkbox
+         Dim txt As String = If(data.CheckState, "Enabled", "Disabled")
+         Using f As New Font("Segoe UI", 9)
+            g.DrawString(txt, f, Brushes.Black, x + cbSize + 6, y - 1)
+         End Using
+
+      Else
+         e.DrawDefault = True
+      End If
+   End Sub
+
 End Class

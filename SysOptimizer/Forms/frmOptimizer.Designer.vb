@@ -24,6 +24,7 @@ Partial Class frmOptimizer
    Private Sub InitializeComponent()
       lvOptimizer = New ListView()
       ColumnHeader1 = New ColumnHeader()
+      ColumnHeader2 = New ColumnHeader()
       btnProcess = New Button()
       SuspendLayout()
       ' 
@@ -31,9 +32,11 @@ Partial Class frmOptimizer
       ' 
       lvOptimizer.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
       lvOptimizer.CheckBoxes = True
-      lvOptimizer.Columns.AddRange(New ColumnHeader() {ColumnHeader1})
+      lvOptimizer.Columns.AddRange(New ColumnHeader() {ColumnHeader1, ColumnHeader2})
+      lvOptimizer.FullRowSelect = True
       lvOptimizer.Location = New Point(0, 0)
       lvOptimizer.Name = "lvOptimizer"
+      lvOptimizer.OwnerDraw = True
       lvOptimizer.Size = New Size(804, 413)
       lvOptimizer.TabIndex = 0
       lvOptimizer.UseCompatibleStateImageBehavior = False
@@ -41,7 +44,13 @@ Partial Class frmOptimizer
       ' 
       ' ColumnHeader1
       ' 
-      ColumnHeader1.Text = "Option"
+      ColumnHeader1.Text = "Action"
+      ColumnHeader1.Width = 200
+      ' 
+      ' ColumnHeader2
+      ' 
+      ColumnHeader2.Text = "Option"
+      ColumnHeader2.Width = 150
       ' 
       ' btnProcess
       ' 
@@ -69,5 +78,6 @@ Partial Class frmOptimizer
    Friend WithEvents lvOptimizer As ListView
    Friend WithEvents ColumnHeader1 As ColumnHeader
    Friend WithEvents btnProcess As Button
+   Friend WithEvents ColumnHeader2 As ColumnHeader
 
 End Class
