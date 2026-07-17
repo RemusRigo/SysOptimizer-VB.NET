@@ -1,10 +1,10 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmOptimizer
    Inherits System.Windows.Forms.Form
 
    'Form overrides dispose to clean up the component list.
-   <System.Diagnostics.DebuggerNonUserCode()>
-   Protected Overrides Sub Dispose(disposing As Boolean)
+   <System.Diagnostics.DebuggerNonUserCode()> _
+   Protected Overrides Sub Dispose(ByVal disposing As Boolean)
       Try
          If disposing AndAlso components IsNot Nothing Then
             components.Dispose()
@@ -18,66 +18,60 @@ Partial Class frmOptimizer
    Private components As System.ComponentModel.IContainer
 
    'NOTE: The following procedure is required by the Windows Form Designer
-   'It can be modified using the Windows Form Designer.
+   'It can be modified using the Windows Form Designer.  
    'Do not modify it using the code editor.
-   <System.Diagnostics.DebuggerStepThrough()>
+   <System.Diagnostics.DebuggerStepThrough()> _
    Private Sub InitializeComponent()
-      lvOptimizer = New ListView()
-      ColumnHeader1 = New ColumnHeader()
-      ColumnHeader2 = New ColumnHeader()
-      btnProcess = New Button()
+      Dim TreeNode1 As TreeNode = New TreeNode("Repair")
+      Dim TreeNode2 As TreeNode = New TreeNode("Optimize")
+      scOptimizer = New SplitContainer()
+      tvOptions = New TreeView()
+      CType(scOptimizer, ComponentModel.ISupportInitialize).BeginInit()
+      scOptimizer.Panel1.SuspendLayout()
+      scOptimizer.SuspendLayout()
       SuspendLayout()
       ' 
-      ' lvOptimizer
+      ' scOptimizer
       ' 
-      lvOptimizer.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
-      lvOptimizer.CheckBoxes = True
-      lvOptimizer.Columns.AddRange(New ColumnHeader() {ColumnHeader1, ColumnHeader2})
-      lvOptimizer.FullRowSelect = True
-      lvOptimizer.Location = New Point(0, 0)
-      lvOptimizer.Name = "lvOptimizer"
-      lvOptimizer.OwnerDraw = True
-      lvOptimizer.Size = New Size(804, 413)
-      lvOptimizer.TabIndex = 0
-      lvOptimizer.UseCompatibleStateImageBehavior = False
-      lvOptimizer.View = View.Details
+      scOptimizer.Dock = DockStyle.Fill
+      scOptimizer.FixedPanel = FixedPanel.Panel1
+      scOptimizer.Location = New Point(0, 0)
+      scOptimizer.Name = "scOptimizer"
       ' 
-      ' ColumnHeader1
+      ' scOptimizer.Panel1
       ' 
-      ColumnHeader1.Text = "Action"
-      ColumnHeader1.Width = 200
+      scOptimizer.Panel1.Controls.Add(tvOptions)
+      scOptimizer.Size = New Size(800, 450)
+      scOptimizer.SplitterDistance = 189
+      scOptimizer.TabIndex = 0
       ' 
-      ' ColumnHeader2
+      ' tvOptions
       ' 
-      ColumnHeader2.Text = "Option"
-      ColumnHeader2.Width = 150
-      ' 
-      ' btnProcess
-      ' 
-      btnProcess.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-      btnProcess.Location = New Point(755, 416)
-      btnProcess.Name = "btnProcess"
-      btnProcess.Size = New Size(46, 23)
-      btnProcess.TabIndex = 2
-      btnProcess.Text = "Run"
-      btnProcess.UseVisualStyleBackColor = True
+      tvOptions.Dock = DockStyle.Fill
+      tvOptions.Location = New Point(0, 0)
+      tvOptions.Name = "tvOptions"
+      TreeNode1.Name = "Node0"
+      TreeNode1.Text = "Repair"
+      TreeNode2.Name = "Node1"
+      TreeNode2.Text = "Optimize"
+      tvOptions.Nodes.AddRange(New TreeNode() {TreeNode1, TreeNode2})
+      tvOptions.Size = New Size(189, 450)
+      tvOptions.TabIndex = 0
       ' 
       ' frmOptimizer
       ' 
       AutoScaleDimensions = New SizeF(7F, 15F)
       AutoScaleMode = AutoScaleMode.Font
-      ClientSize = New Size(804, 441)
-      Controls.Add(btnProcess)
-      Controls.Add(lvOptimizer)
+      ClientSize = New Size(800, 450)
+      Controls.Add(scOptimizer)
       Name = "frmOptimizer"
-      StartPosition = FormStartPosition.CenterScreen
-      Text = "SysOptimizer"
+      Text = "frmOptimizer"
+      scOptimizer.Panel1.ResumeLayout(False)
+      CType(scOptimizer, ComponentModel.ISupportInitialize).EndInit()
+      scOptimizer.ResumeLayout(False)
       ResumeLayout(False)
    End Sub
 
-   Friend WithEvents lvOptimizer As ListView
-   Friend WithEvents ColumnHeader1 As ColumnHeader
-   Friend WithEvents btnProcess As Button
-   Friend WithEvents ColumnHeader2 As ColumnHeader
-
+   Friend WithEvents scOptimizer As SplitContainer
+   Friend WithEvents tvOptions As TreeView
 End Class
