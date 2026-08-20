@@ -1,0 +1,6 @@
+﻿2026-06-27 12:37:44: Info: File deleted: C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows-gather.db
+2026-06-27 12:37:44: Info: File deleted: C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows-usn.db
+2026-06-27 12:37:44: Info: File deleted: C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows-usn.db-shm
+2026-06-27 12:37:44: Info: File deleted: C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows-usn.db-wal
+2026-06-27 12:37:44: Info: File deleted: C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows.db
+2026-06-27 12:37:44: Info: Reg: Windows Search: Indexing DB reset: ok
