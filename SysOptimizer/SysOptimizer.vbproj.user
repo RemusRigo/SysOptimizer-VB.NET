@@ -4,10 +4,14 @@
     <Compile Update="Controls\rrProgressBar.vb">
       <SubType>Component</SubType>
     </Compile>
+<<<<<<< HEAD
     <Compile Update="Forms\frmApps.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\frmFileSystem.vb">
+=======
+    <Compile Update="Forms\frmActions.vb">
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\frmOptimizer.vb">

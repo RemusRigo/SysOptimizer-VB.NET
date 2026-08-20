@@ -22,11 +22,18 @@ Partial Class frmOptimizer
    'Do not modify it using the code editor.
    <System.Diagnostics.DebuggerStepThrough()> _
    Private Sub InitializeComponent()
+<<<<<<< HEAD
       scOptimizer = New SplitContainer()
       btnApps = New Button()
       btnReg = New Button()
       btnFS = New Button()
       btnRepair = New Button()
+=======
+      Dim TreeNode1 As TreeNode = New TreeNode("Repair")
+      Dim TreeNode2 As TreeNode = New TreeNode("Optimize")
+      scOptimizer = New SplitContainer()
+      tvOptions = New TreeView()
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
       CType(scOptimizer, ComponentModel.ISupportInitialize).BeginInit()
       scOptimizer.Panel1.SuspendLayout()
       scOptimizer.SuspendLayout()
@@ -41,6 +48,7 @@ Partial Class frmOptimizer
       ' 
       ' scOptimizer.Panel1
       ' 
+<<<<<<< HEAD
       scOptimizer.Panel1.Controls.Add(btnApps)
       scOptimizer.Panel1.Controls.Add(btnReg)
       scOptimizer.Panel1.Controls.Add(btnFS)
@@ -100,6 +108,25 @@ Partial Class frmOptimizer
       btnRepair.TextAlign = ContentAlignment.MiddleLeft
       btnRepair.TextImageRelation = TextImageRelation.ImageBeforeText
       btnRepair.UseVisualStyleBackColor = True
+=======
+      scOptimizer.Panel1.Controls.Add(tvOptions)
+      scOptimizer.Size = New Size(800, 450)
+      scOptimizer.SplitterDistance = 189
+      scOptimizer.TabIndex = 0
+      ' 
+      ' tvOptions
+      ' 
+      tvOptions.Dock = DockStyle.Fill
+      tvOptions.Location = New Point(0, 0)
+      tvOptions.Name = "tvOptions"
+      TreeNode1.Name = "Node0"
+      TreeNode1.Text = "Repair"
+      TreeNode2.Name = "Node1"
+      TreeNode2.Text = "Optimize"
+      tvOptions.Nodes.AddRange(New TreeNode() {TreeNode1, TreeNode2})
+      tvOptions.Size = New Size(189, 450)
+      tvOptions.TabIndex = 0
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
       ' 
       ' frmOptimizer
       ' 
@@ -108,7 +135,11 @@ Partial Class frmOptimizer
       ClientSize = New Size(800, 450)
       Controls.Add(scOptimizer)
       Name = "frmOptimizer"
+<<<<<<< HEAD
       Text = "Optimizer"
+=======
+      Text = "frmOptimizer"
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
       scOptimizer.Panel1.ResumeLayout(False)
       CType(scOptimizer, ComponentModel.ISupportInitialize).EndInit()
       scOptimizer.ResumeLayout(False)
@@ -116,8 +147,12 @@ Partial Class frmOptimizer
    End Sub
 
    Friend WithEvents scOptimizer As SplitContainer
+<<<<<<< HEAD
    Friend WithEvents btnApps As Button
    Friend WithEvents btnReg As Button
    Friend WithEvents btnFS As Button
    Friend WithEvents btnRepair As Button
+=======
+   Friend WithEvents tvOptions As TreeView
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
 End Class

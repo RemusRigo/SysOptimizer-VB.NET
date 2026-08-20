@@ -1,5 +1,8 @@
 ﻿Imports System.IO
+<<<<<<< HEAD
 Imports Microsoft.Win32
+=======
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
 
 Public Class frmRepair
 
@@ -19,9 +22,15 @@ Public Class frmRepair
       lvRepair.BeginUpdate()
       lvRepair.Items.Clear()
 
+<<<<<<< HEAD
       LV_AddItem("Icon Cache", True)
       If IsAppElevated() Then LV_AddItem("Windows Search", True)
       If IsAppElevated() Then LV_AddItem("Windows Update", True)
+=======
+      LV_AddItem("Windows Update", True)
+      LV_AddItem("Icon Cache", True)
+      If IsAppElevated() Then LV_AddItem("Windows Update cache", False)
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
 
       lvRepair.EndUpdate()
    End Sub
@@ -32,6 +41,7 @@ Public Class frmRepair
       For Each item As ListViewItem In lvRepair.Items
          If item.Checked Then
             Select Case item.Text
+<<<<<<< HEAD
 
                '-----------------------------------------------------------------------------------
                Case "Icon Cache"
@@ -67,6 +77,13 @@ Public Class frmRepair
 
                '-----------------------------------------------------------------------------------
                Case "Windows Update"
+=======
+               Case "Windows Update"
+
+               Case "Icon Cache"
+
+               Case "Windows Update cache"
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
                   log.Msg.Info("Clean: Microsoft Windows » FileSystem: Windows Update cache")
                   StopService("wuauserv")
                   StopService("bits")
@@ -82,7 +99,10 @@ Public Class frmRepair
                   StartService("cryptsvc")
                   StartService("bits")
                   StartService("wuauserv")
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
             End Select
          End If
       Next

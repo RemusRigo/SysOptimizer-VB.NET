@@ -1,5 +1,6 @@
 #------------------------------------------------
 # © 2026 Remus Rigo
+<<<<<<< HEAD
 #    2026-08-16
 #------------------------------------------------
 
@@ -34,3 +35,48 @@ __recovery		# Delphi
 
 [Dd]esktop.ini		# Windows
 [Tt]humbs.db		# Windows
+=======
+#    2026-07-09
+#------------------------------------------------
+
+# My ignored files ------------------------------
+[Ss]ync.*
+*.psd
+
+# common ----------------------------------------
+*.bak
+*.log
+*.tmp
+
+#------------------------------------------------
+# Common compiler ignored files
+[Bb]in
+[Oo]bj
+
+# Windows ---------------------------------------
+[Dd]esktop.ini
+[Tt]humbs.db
+
+# Delphi ----------------------------------------
+[Bb]in
+[Oo]bj
+__history
+__recovery
+*.dproj.local
+*.dsk
+*.dsv
+*.groupproj.local
+*.identcache
+*.tvsconfig
+
+# Lazarus ---------------------------------------
+*.lps
+
+# Rust ------------------------------------------
+target/
+
+# Visual Studio ---------------------------------
+.vs/
+[Bb]in
+[Oo]bj
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8

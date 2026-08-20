@@ -33,9 +33,17 @@ Just run SysOptimizer.exe
 
 ## Roadmap
 
+<<<<<<< HEAD
 * 2026-08-20: Add: Registry: Disable Bing Search in Start Menu
 * 2026-08-20: Add: Split project in 4 categories
 * 2026-07-17: Add: Stop Windows Search service
 * 2026-07-17: Add: Windows Search
 * 2026-07-17: Add: Windows Update
+=======
+* 2026-07-17: Add: Repair: Windows Update
+* 2026-06-25: NOK: implement CheckBox into ListView
+* 2026-06-25: Add: implement CheckBox into ListView
+* 2026-06-25: Add: implement Logger class
+* 2026-06-25: Add: implement OSVersion class
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
 * 2026-06-25: Project started

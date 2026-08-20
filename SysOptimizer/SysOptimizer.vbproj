@@ -15,20 +15,26 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Update="Forms\frmApps.vb" />
     <Compile Update="Forms\frmRegistry.vb">
       <SubType>Form</SubType>
     </Compile>
+=======
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
     <Compile Update="My Project\Application.Designer.vb">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Update="My Project\Resources.Designer.vb">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+=======
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +48,7 @@
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="10.0.9" />
   </ItemGroup>
 
+<<<<<<< HEAD
   <ItemGroup>
     <EmbeddedResource Update="My Project\Resources.resx">
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
@@ -50,4 +57,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
+=======
+>>>>>>> 6f872c4580e8171f07be41ad0bb3d514848b76d8
 </Project>
