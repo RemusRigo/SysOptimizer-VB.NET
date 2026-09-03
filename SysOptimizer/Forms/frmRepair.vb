@@ -1,0 +1,171 @@
+﻿'--------------------------------------------------------------------------------------------------
+' SysOptimizer: frmRepair.vb: Repair utilities
+'    © 2026 Remus Rigo
+'       v1.1.20260825
+'--------------------------------------------------------------------------------------------------
+
+Imports System.IO
+Imports Microsoft.Win32
+Imports SysOptimizer.UIControls
+
+Public Class frmRepair
+
+   Dim log As New Logger(appName)
+
+   '-----------------------------------------------------------------------------------------------
+   ' Build Options
+   Public Sub BuildOptions()
+      lvRepair.BeginUpdate()
+      lvRepair.Items.Clear()
+
+      LV_AddItem(lvRepair, "Icon Cache", True)
+      LV_AddItem(lvRepair, "Windows Photo Viewer", True)
+      If IsAppElevated() Then LV_AddItem(lvRepair, "Windows Search/Indexing service", True)
+      If IsAppElevated() Then LV_AddItem(lvRepair, "Windows Update", False)
+
+      lvRepair.EndUpdate()
+   End Sub
+
+   '-----------------------------------------------------------------------------------------------
+   ' Process Actions
+   Public Async Sub ProcessActions()
+      For Each item As ListViewItem In lvRepair.Items
+         If item.Checked Then
+            Select Case item.Text
+
+               '-----------------------------------------------------------------------------------
+               Case "Icon Cache"
+                  ' stop explorer
+                  Dim killProcess As Process = Process.Start("taskkill.exe", "/f /im explorer.exe")
+                  killProcess.WaitForExit() ' Wait until explorer is fully closed
+                  Dim pathsToClean As String() = {
+                     Environment.GetEnvironmentVariable("LocalAppData")
+                  }
+                  CleanFolders(pathsToClean, "IconCache*.db", False, False)
+                  ' start explorer
+                  Process.Start("explorer.exe")
+
+               '-----------------------------------------------------------------------------------
+               Case "Windows Photo Viewer"
+                  Dim extensions() As String = {"arw", "bmp", "gif", "jfif", "jpg", "jpeg", "nef", "png", "tif", "tiff", "wdp"}
+                  For Each ext As String In extensions
+                     ' current user
+                     RegWriteSZ(Registry.CurrentUser, "Software\Classes\." & ext, "", "PhotoViewer.FileAssoc.Tiff")
+                     RegWriteNone(Registry.CurrentUser, "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\." & ext & "\OpenWithProgids", "PhotoViewer.FileAssoc.Tiff", New Byte() {})
+                  Next
+
+
+               '-----------------------------------------------------------------------------------
+               Case "Windows Search/Indexing service"
+                  ' stop service
+                  StopService("wsearch")
+                  Await Task.Delay(5000)
+                  ' delete files
+                  Dim delPath As String = Environment.ExpandEnvironmentVariables("%ProgramData%\Microsoft\Search\Data\Applications\Windows")
+                  Try
+                     If Directory.Exists(delPath) Then
+                        For Each delFile As String In Directory.GetFiles(delPath)
+                           Try
+                              File.Delete(delFile)
+                              log.Msg.Info("File deleted: " & delFile)
+                           Catch ex As Exception
+                              log.Msg.Error("Error deleting file: " & delFile & " - " & ex.Message)
+                           End Try
+                        Next
+                     Else
+                        log.Msg.Warning("Folder not found: " & delPath)
+                     End If
+                  Catch ex As Exception
+                     log.Msg.Error("Folder cleanup error: " & ex.Message)
+                  End Try
+                  ' reset flags
+                  If RegWriteDWord(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows Search", "SetupCompletedSuccessfully", 1) Then
+                     log.Msg.Info("Reg: Windows Search: Indexing DB reset: ok")
+                  Else
+                     log.Msg.Error("Reg: Windows Search: Indexing DB reset: not ok")
+                  End If
+                  ' start service
+                  StartService("wsearch")
+
+               '-----------------------------------------------------------------------------------
+               Case "Windows Update"
+                  log.Msg.Info("Repair: Microsoft Windows Update")
+                  StopService("wuauserv")
+                  StopService("bits")
+                  StopService("cryptsvc")
+                  StopService("msiserver")
+                  Await Task.Delay(5000)
+                  Dim pathsToClean As String() = {
+                     Path.Combine(Environment.GetEnvironmentVariable("SystemRoot"), "SoftwareDistribution\Download"),
+                     Path.Combine(Environment.GetEnvironmentVariable("SystemRoot"), "SoftwareDistribution\DataStore")
+                  }
+                  CleanFolders(pathsToClean, "*.*", True, True)
+                  StartService("msiserver")
+                  StartService("cryptsvc")
+                  StartService("bits")
+                  StartService("wuauserv")
+            End Select
+         End If
+      Next
+   End Sub
+
+   '-----------------------------------------------------------------------------------------------
+   ' frmRepair: OnLoad
+   Private Sub frmRepair_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+      lvRepair.Columns.Add("Option", 350, HorizontalAlignment.Left)
+      lvRepair.HeaderStyle = ColumnHeaderStyle.None
+
+      BuildOptions()
+   End Sub
+
+   '-----------------------------------------------------------------------------------------------
+   ' btnRepairRun: OnClick
+   Private Sub btnRepairRun_Click(sender As Object, e As EventArgs) Handles btnRepairRun.Click
+      ProcessActions()
+   End Sub
+
+   '-----------------------------------------------------------------------------------------------
+   ' CleanFolders
+   Private Sub CleanFolders(folderPaths As IEnumerable(Of String), mask As String, recursive As Boolean, deleteFolders As Boolean)
+      ' Convert to list to avoid multiple enumerations
+      Dim pathsList = folderPaths.ToList()
+
+      For Each folderPath As String In pathsList
+         If Not Directory.Exists(folderPath) Then Continue For
+
+         Dim search = If(recursive, SearchOption.AllDirectories, SearchOption.TopDirectoryOnly)
+         Dim files() As String
+         Try
+            files = Directory.GetFiles(folderPath, mask, search)
+         Catch
+            Continue For
+         End Try
+
+         ' delete files in reverse order to avoid issues with file system changes during deletion
+         For i = 0 To files.Length - 1
+            Try
+               File.Delete(files(i))
+            Catch ex As Exception
+               log.Msg.Error($"{ex.Message} : {files(i)}")
+            End Try
+         Next
+
+         ' delete folders in reverse order to avoid issues with file system changes during deletion
+         If deleteFolders AndAlso recursive Then
+            Try
+               Dim folders() As String = Directory.GetDirectories(folderPath, "*", SearchOption.AllDirectories)
+               For i = 0 To folders.Length - 1
+                  Try
+                     Directory.Delete(folders(i), False)
+                  Catch ex As Exception
+                     log.Msg.Error($"{ex.Message} : {folders(i)}")
+                  End Try
+               Next
+            Catch ex As Exception
+               log.Msg.Error($"{ex.Message} : {folderPath}")
+            End Try
+         End If
+      Next
+   End Sub
+
+End Class
