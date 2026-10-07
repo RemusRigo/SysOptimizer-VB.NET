@@ -1,7 +1,7 @@
 ﻿'--------------------------------------------------------------------------------------------------
 ' SysOptimizer: frmRepair.vb: Repair utilities
 '    © 2026 Remus Rigo
-'       v1.1.20260825
+'       v1.1.20261007
 '--------------------------------------------------------------------------------------------------
 
 Imports System.IO
@@ -18,9 +18,10 @@ Public Class frmRepair
       lvRepair.BeginUpdate()
       lvRepair.Items.Clear()
 
-      LV_AddItem(lvRepair, "Icon Cache", True)
+      If IsAppElevated() Then LV_AddItem(lvRepair, "Microsoft Configuration Manager (SCCM)", True)
+      LV_AddItem(lvRepair, "Windows Icon Cache", True)
       LV_AddItem(lvRepair, "Windows Photo Viewer", True)
-      If IsAppElevated() Then LV_AddItem(lvRepair, "Windows Search/Indexing service", True)
+      If IsAppElevated() Then LV_AddItem(lvRepair, "Windows Search (Indexing service)", True)
       If IsAppElevated() Then LV_AddItem(lvRepair, "Windows Update", False)
 
       lvRepair.EndUpdate()
@@ -34,7 +35,20 @@ Public Class frmRepair
             Select Case item.Text
 
                '-----------------------------------------------------------------------------------
-               Case "Icon Cache"
+               Case "Microsoft Configuration Manager (SCCM)"
+                  ' stop service
+                  StopService("ccmexec")
+                  Await Task.Delay(5000)
+                  ' delete files
+                  Dim pathsToClean As String() = {
+                     Path.Combine(Environment.GetEnvironmentVariable("SystemRoot"), "ccmcache")
+                  }
+                  CleanFolders(pathsToClean, "*.*", True, True)
+                  ' start service
+                  StartService("ccmexec")
+
+               '-----------------------------------------------------------------------------------
+               Case "Windows Icon Cache"
                   ' stop explorer
                   Dim killProcess As Process = Process.Start("taskkill.exe", "/f /im explorer.exe")
                   killProcess.WaitForExit() ' Wait until explorer is fully closed
@@ -56,7 +70,7 @@ Public Class frmRepair
 
 
                '-----------------------------------------------------------------------------------
-               Case "Windows Search/Indexing service"
+               Case "Windows Search (Indexing service)"
                   ' stop service
                   StopService("wsearch")
                   Await Task.Delay(5000)

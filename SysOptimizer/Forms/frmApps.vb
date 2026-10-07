@@ -4,6 +4,7 @@
 '       v1.1.20260825
 '--------------------------------------------------------------------------------------------------
 
+Imports Microsoft.Win32
 Imports SysOptimizer.UIControls
 
 Public Class frmApps
@@ -20,12 +21,16 @@ Public Class frmApps
       lvApps.Items.Clear()
       lvApps.Groups.Clear()
 
-      ' If IsAppElevated() Then
-      LV_AddGroup(lvApps, grp, "App 1")
-      LVCB_AddItem(lvApps, grp, "Item 1", True, True)
-      LVCB_AddItem(lvApps, grp, "Item 2", True, True)
 
-      'ResizeLVColumns(lvApps)
+      LV_AddGroup(lvApps, grp, "Microsoft Edge")
+      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "Default Browser Setting Enabled", True, True)
+      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "Default Browser Settings Campaign Enabled", True, True)
+      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "Edge Shopping Assistant Enabled", True, True)
+      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "Hide First Run Experience", True, True)
+      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "New TabPage Content Enabled", True, True)
+
+      lvApps.Columns(0).Width = -1
+      lvApps.Columns(0).Width = lvApps.Columns(0).Width + 30
       lvApps.EndUpdate()
    End Sub
 
@@ -38,23 +43,46 @@ Public Class frmApps
 
          Select Case grp.Header
 
-            Case "App 1"
+            Case "Microsoft Edge"
                Select Case item.Text
 
-                  '--------------------------------------------------------------------------------
-                  Case "Item 1"
-                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then
-                        MessageBox.Show("checked")
-                     Else
-                        MessageBox.Show("unchecked")
+                  Case "Default Browser Setting Enabled"
+                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "DefaultBrowserSettingEnabled", 1)
+                     Else ' Cloak
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "DefaultBrowserSettingEnabled", 0)
                      End If
                      pbActions.Value += 1
 
-                  Case "Item 2"
-                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then
-                        MessageBox.Show("checked")
-                     Else
-                        MessageBox.Show("unchecked")
+                  Case "Default Browser Settings Campaign Enabled"
+                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "DefaultBrowserSettingsCampaignEnabled", 1)
+                     Else ' Cloak
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "DefaultBrowserSettingsCampaignEnabled", 0)
+                     End If
+                     pbActions.Value += 1
+
+                  Case "Edge Shopping Assistant Enabled"
+                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "EdgeShoppingAssistantEnabled", 1)
+                     Else ' Cloak
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "EdgeShoppingAssistantEnabled", 0)
+                     End If
+                     pbActions.Value += 1
+
+                  Case "Hide First Run Experience"
+                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "HideFirstRunExperience", 1)
+                     Else ' Cloak
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "HideFirstRunExperience", 0)
+                     End If
+                     pbActions.Value += 1
+
+                  Case "New TabPage Content Enabled"
+                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "NewTabPageContentEnabled", 1)
+                     Else ' Cloak
+                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "NewTabPageContentEnabled", 0)
                      End If
                      pbActions.Value += 1
 
@@ -66,6 +94,8 @@ Public Class frmApps
    '-----------------------------------------------------------------------------------------------
    ' frmApps: OnLoad
    Private Sub frmApps_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+      lvApps.Columns.Add("Option", 350, HorizontalAlignment.Left)
+      lvApps.Columns.Add("Default", 75, HorizontalAlignment.Left)
       lvApps.HeaderStyle = ColumnHeaderStyle.None
       lvcbApps = New clsListViewCheckBox(lvApps)
       lvcbApps.AttachContextMenu()

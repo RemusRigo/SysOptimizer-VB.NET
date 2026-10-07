@@ -22,62 +22,51 @@ Partial Class frmApps
    'Do not modify it using the code editor.
    <System.Diagnostics.DebuggerStepThrough()>
    Private Sub InitializeComponent()
-      lvApps = New ListView()
-      ColumnHeader1 = New ColumnHeader()
-      ColumnHeader2 = New ColumnHeader()
-      btnAppsRun = New Button()
-      SuspendLayout()
-      ' 
-      ' lvApps
-      ' 
-      lvApps.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
-      lvApps.CheckBoxes = True
-      lvApps.Columns.AddRange(New ColumnHeader() {ColumnHeader1, ColumnHeader2})
-      lvApps.FullRowSelect = True
-      lvApps.Location = New Point(0, 0)
-      lvApps.Name = "lvApps"
-      lvApps.OwnerDraw = True
-      lvApps.Size = New Size(804, 413)
-      lvApps.TabIndex = 0
-      lvApps.UseCompatibleStateImageBehavior = False
-      lvApps.View = View.Details
-      ' 
-      ' ColumnHeader1
-      ' 
-      ColumnHeader1.Text = "Action"
-      ColumnHeader1.Width = 200
-      ' 
-      ' ColumnHeader2
-      ' 
-      ColumnHeader2.Text = "Option"
-      ColumnHeader2.Width = 150
-      ' 
-      ' btnAppsRun
-      ' 
-      btnAppsRun.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-      btnAppsRun.Location = New Point(755, 416)
-      btnAppsRun.Name = "btnAppsRun"
-      btnAppsRun.Size = New Size(46, 23)
-      btnAppsRun.TabIndex = 2
-      btnAppsRun.Text = "Run"
-      btnAppsRun.UseVisualStyleBackColor = True
-      ' 
-      ' frmApps
-      ' 
-      AutoScaleDimensions = New SizeF(7F, 15F)
-      AutoScaleMode = AutoScaleMode.Font
-      ClientSize = New Size(804, 441)
-      Controls.Add(btnAppsRun)
-      Controls.Add(lvApps)
-      Name = "frmApps"
-      StartPosition = FormStartPosition.CenterScreen
-      Text = "Apps"
-      ResumeLayout(False)
-   End Sub
+        Me.lvApps = New System.Windows.Forms.ListView()
+        Me.btnAppsRun = New System.Windows.Forms.Button()
+        Me.SuspendLayout()
+        '
+        'lvApps
+        '
+        Me.lvApps.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lvApps.CheckBoxes = True
+        Me.lvApps.FullRowSelect = True
+        Me.lvApps.HideSelection = False
+        Me.lvApps.Location = New System.Drawing.Point(0, 0)
+        Me.lvApps.Name = "lvApps"
+        Me.lvApps.OwnerDraw = True
+        Me.lvApps.Size = New System.Drawing.Size(690, 358)
+        Me.lvApps.TabIndex = 0
+        Me.lvApps.UseCompatibleStateImageBehavior = False
+        Me.lvApps.View = System.Windows.Forms.View.Details
+        '
+        'btnAppsRun
+        '
+        Me.btnAppsRun.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnAppsRun.Location = New System.Drawing.Point(647, 361)
+        Me.btnAppsRun.Name = "btnAppsRun"
+        Me.btnAppsRun.Size = New System.Drawing.Size(39, 20)
+        Me.btnAppsRun.TabIndex = 2
+        Me.btnAppsRun.Text = "Run"
+        Me.btnAppsRun.UseVisualStyleBackColor = True
+        '
+        'frmApps
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.ClientSize = New System.Drawing.Size(689, 382)
+        Me.Controls.Add(Me.btnAppsRun)
+        Me.Controls.Add(Me.lvApps)
+        Me.Name = "frmApps"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Apps"
+        Me.ResumeLayout(False)
 
-   Friend WithEvents lvApps As ListView
-   Friend WithEvents ColumnHeader1 As ColumnHeader
-   Friend WithEvents btnAppsRun As Button
-   Friend WithEvents ColumnHeader2 As ColumnHeader
+    End Sub
+
+    Friend WithEvents lvApps As ListView
+    Friend WithEvents btnAppsRun As Button
 
 End Class
