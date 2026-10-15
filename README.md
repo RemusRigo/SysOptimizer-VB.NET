@@ -1,10 +1,9 @@
 # SysOptimizer
-
-A Windows utility that optimizes the system
-
+SysOptimizer: a Windows utility that repairs and optimizes the system
 
 
-## Authors
+
+## Author
 
 * [@remusrigo](https://github.com/RemusRigo)
 * [@remusrigo](https://sourceforge.net/u/remusrigo/profile)
@@ -13,7 +12,7 @@ A Windows utility that optimizes the system
 
 ## Features
 
-* Clean/Repar:
+* Clean/Repair:
   * Microsoft Configuration Manager (SCCM)
   * Windows Icon cache
   * Windows Photo Viewer
@@ -31,31 +30,44 @@ A Windows utility that optimizes the system
   * Windows Subsystem for Linux (WSL) service
   * WSAIFabricSvc
 
+* Registry:
+  * Content Delivery Manager: suggested apps, tips, welcome experience, suggested content in Settings
+  * Control Panel: disable StickyKeys shortcut
+  * Notifications: "Suggest ways to get the most out of Windows"
+  * Start Menu: disable Bing Search
+
+* Apps:
+  * Microsoft Edge policies: default browser prompts, shopping assistant, first run experience, new tab page content
+
+* Each option shows its Windows default; options that need administrator rights are shown only when running as administrator
+* Logs actions to a file
 
 
-## Downloads \& Runtimes
 
-This project is available in multiple builds to support different environments.
-The release contains following Frameworks:
+## User's Guide
 
-|Target Framework|Supported Architectures|Required Runtime|
-|-|-|-|
-|**.NET Framework 4.8**|x86, x64|[.NET Framework 4.8 Runtime](https://dotnet.microsoft.com/download/dotnet-framework/net48)|
-|**.NET 8.0**|x86, x64|[.NET 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) *(or Desktop Runtime for UI apps)*|
-|**.NET 10.0**|x86, x64|[.NET 10.0 Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) *(or Desktop Runtime for UI apps)*|
+See the [User's Guide](UsersGuide.md) for downloads, runtimes, installation and usage.
 
 
 
 ## Statistics
 
-![status](https://img.shields.io/badge/status-in%20progress-orange)<br>
+![VB.NET](https://img.shields.io/badge/Language-VB.NET-blue)
+![API](https://img.shields.io/badge/API-AdvAPI32-lightblue)
+![API](https://img.shields.io/badge/API-NTDLL-lightblue)
+![Runtime](https://img.shields.io/badge/Runtime-.NET%204.8-lightblue)
+![Runtime](https://img.shields.io/badge/Runtime-.NET%208.0-lightblue)
+![Runtime](https://img.shields.io/badge/Runtime-.NET%2010.0-lightblue)
+![VS](https://img.shields.io/badge/IDE-Visual%20Studio-purple)
+<br>
+![status](https://img.shields.io/badge/status-in%20progress-orange) 
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/RemusRigo/SysOptimizer-VB.NET/total)
 
 
 
 ## Roadmap
 
-* 2026-10-07: Add: Clean/Repar: Microsoft Configuration Manager (SCCM)
+* 2026-10-07: Add: Clean/Repair: Microsoft Configuration Manager (SCCM)
 * 2026-08-24: Add: Clean/Repair: Windows Icon cache
 * 2026-08-21: Fix: implement CheckBox into ListView
 * 2026-08-20: Add: Registry: Disable Bing Search in Start Menu
@@ -69,4 +81,3 @@ The release contains following Frameworks:
 * 2026-06-25: Add: implement Logger class
 * 2026-06-25: Add: implement OSVersion class
 * 2026-06-25: Project started
-
