@@ -1,7 +1,7 @@
 ﻿'--------------------------------------------------------------------------------------------------
 ' SysOptimizer: frmRepair.vb: Repair utilities
 '    © 2026 Remus Rigo
-'       v1.1.20261007
+'       v1.1.20261121
 '--------------------------------------------------------------------------------------------------
 
 Imports System.IO
@@ -61,13 +61,39 @@ Public Class frmRepair
 
                '-----------------------------------------------------------------------------------
                Case "Windows Photo Viewer"
-                  Dim extensions() As String = {"arw", "bmp", "gif", "jfif", "jpg", "jpeg", "nef", "png", "tif", "tiff", "wdp"}
-                  For Each ext As String In extensions
-                     ' current user
-                     RegWriteSZ(Registry.CurrentUser, "Software\Classes\." & ext, "", "PhotoViewer.FileAssoc.Tiff")
-                     RegWriteNone(Registry.CurrentUser, "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\." & ext & "\OpenWithProgids", "PhotoViewer.FileAssoc.Tiff", New Byte() {})
-                  Next
 
+                  ' Registry data
+                  Using key As RegistryKey = Registry.ClassesRoot.CreateSubKey("Applications\photoviewer.dll\shell\open")
+                     key.SetValue("MuiVerb", "@photoviewer.dll,-3043")
+                  End Using
+                  Using key As RegistryKey = Registry.ClassesRoot.CreateSubKey("Applications\photoviewer.dll\shell\open\command")
+                     key.SetValue("", "%SystemRoot%\System32\rundll32.exe ""%ProgramFiles%\Windows Photo Viewer\PhotoViewer.dll"", ImageView_Fullscreen %1", RegistryValueKind.ExpandString)
+                  End Using
+                  Using key As RegistryKey = Registry.ClassesRoot.CreateSubKey("Applications\photoviewer.dll\shell\open\DropTarget")
+                     key.SetValue("Clsid", "{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}")
+                  End Using
+                  Using key As RegistryKey = Registry.ClassesRoot.CreateSubKey("Applications\photoviewer.dll\shell\print")
+                     key.SetValue("NeverDefault", "")
+                  End Using
+                  Using key As RegistryKey = Registry.ClassesRoot.CreateSubKey("Applications\photoviewer.dll\shell\print\command")
+                     key.SetValue("", "%SystemRoot%\System32\rundll32.exe ""%ProgramFiles%\Windows Photo Viewer\PhotoViewer.dll"", ImageView_Fullscreen %1", RegistryValueKind.ExpandString)
+                  End Using
+                  Using key As RegistryKey = Registry.ClassesRoot.CreateSubKey("Applications\photoviewer.dll\shell\print\DropTarget")
+                     key.SetValue("Clsid", "{60fd46de-f830-4894-a628-6fa81bc0190d}")
+                  End Using
+
+                  ' Asign image extensions (including RAW files)
+                  Dim extensions() As String = {"bmp", "dib", "gif", "jfif", "jpe", "jpg", "jpeg", "png", "tif", "tiff", "wdp",
+                     "dng", "arw", "cr2", "cr3", "dcr", "kdc", "nef", "nrw", "orf", "pef", "raf", "rw2", "sr2", "srf", "x3f"
+                  }
+                  For Each ext As String In extensions
+                     Using key As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\Classes\." & ext)
+                        key.SetValue("", "PhotoViewer.FileAssoc.Tiff")
+                     End Using
+                     Using key As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\." & ext & "\OpenWithProgids")
+                        key.SetValue("PhotoViewer.FileAssoc.Tiff", "", RegistryValueKind.None)
+                     End Using
+                  Next
 
                '-----------------------------------------------------------------------------------
                Case "Windows Search (Indexing service)"

@@ -12,6 +12,13 @@ Namespace UIControls
          Public Property HasCheckBox As Boolean
          Public Property CheckState As Boolean
          Public Property Display As String
+
+         ' What the row does when Run is pressed. Gets CheckState: True = restore default, False = optimize
+         Public Property Apply As Action(Of Boolean)
+
+         ' The values the row was added with (used by the "Defaults" context menu item)
+         Public Property DefaultChecked As Boolean
+         Public Property DefaultCheckState As Boolean
       End Class
 
       '-----------------------------------------------------------------------------------------------
@@ -31,18 +38,21 @@ Namespace UIControls
 
       '-----------------------------------------------------------------------------------------------
       ' Add ListView item
-      Public Sub LVCB_AddItem(lv As ListView, ByRef grp As ListViewGroup, name As String, isChecked As Boolean, Optional hasCheckBox As Boolean = False, Optional CheckBoxIsChecked As Boolean = False, Optional CheckBoxText As String = "On/Off")
+      Public Function LVCB_AddItem(lv As ListView, ByRef grp As ListViewGroup, name As String, isChecked As Boolean, Optional hasCheckBox As Boolean = False, Optional CheckBoxIsChecked As Boolean = False, Optional CheckBoxText As String = "On/Off") As ListViewItem
          Dim item As New ListViewItem(name)
          item.SubItems.Add("")
          item.Checked = isChecked
          item.Tag = New LV_CheckBoxData With {
             .HasCheckBox = hasCheckBox,
             .CheckState = CheckBoxIsChecked,
-            .Display = CheckBoxText
+            .Display = CheckBoxText,
+            .DefaultChecked = isChecked,
+            .DefaultCheckState = CheckBoxIsChecked
          }
          item.Group = grp
          lv.Items.Add(item)
-      End Sub
+         Return item
+      End Function
 
       '-----------------------------------------------------------------------------------------------
       ' Resize ListView Columns

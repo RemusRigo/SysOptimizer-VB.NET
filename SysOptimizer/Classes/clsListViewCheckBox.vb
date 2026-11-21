@@ -119,8 +119,21 @@ Namespace UIControls
          menu.Items.Add(New ToolStripSeparator())
          menu.Items.Add("Check all defaults", Nothing, Sub() CheckAllData(True))
          menu.Items.Add("Uncheck all defaults", Nothing, Sub() CheckAllData(False))
+         menu.Items.Add(New ToolStripSeparator())
+         menu.Items.Add("Defaults", Nothing, Sub() CheckDefaults())
 
          lv.ContextMenuStrip = menu
+      End Sub
+
+      ' Puts both checkboxes of every row back to the values the row was added with
+      Public Sub CheckDefaults()
+         For Each item As ListViewItem In lv.Items
+            Dim data = TryCast(item.Tag, LV_CheckBoxData)
+            If data Is Nothing Then Continue For
+            item.Checked = data.DefaultChecked
+            If data.HasCheckBox Then data.CheckState = data.DefaultCheckState
+         Next
+         lv.Invalidate()
       End Sub
 
       Public Sub CheckAllItems(checked As Boolean)

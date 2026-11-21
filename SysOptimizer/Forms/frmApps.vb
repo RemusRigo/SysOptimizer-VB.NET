@@ -1,7 +1,7 @@
 ﻿'--------------------------------------------------------------------------------------------------
 ' SysOptimizer: frmApps.vb: Apps optimization
 '    © 2026 Remus Rigo
-'       v1.1.20260825
+'       v1.2.20261121
 '--------------------------------------------------------------------------------------------------
 
 Imports Microsoft.Win32
@@ -10,85 +10,30 @@ Imports SysOptimizer.UIControls
 Public Class frmApps
    Private lvcbApps As clsListViewCheckBox
    Private pbActions As ctrlProgressBarPercentage
+   Private ol As OptionList
    Private log As New Logger(appName)
 
-   Dim grp As ListViewGroup = Nothing
-
    '-----------------------------------------------------------------------------------------------
-   ' Build Options
+   ' Build Options: restore default = 1, optimize = 0 (AddRegDWord defaults)
    Public Sub BuildOptions()
-      lvApps.BeginUpdate()
-      lvApps.Items.Clear()
-      lvApps.Groups.Clear()
+      Const EDGE As String = "Software\Policies\Microsoft\Edge"
+      Dim HKLM = Registry.LocalMachine
 
-
-      LV_AddGroup(lvApps, grp, "Microsoft Edge")
-      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "Default Browser Setting Enabled", True, True)
-      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "Default Browser Settings Campaign Enabled", True, True)
-      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "Edge Shopping Assistant Enabled", True, True)
-      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "Hide First Run Experience", True, True)
-      If IsAppElevated() Then LVCB_AddItem(lvApps, grp, "New TabPage Content Enabled", True, True)
+      ol.Build(
+         Sub()
+            ol.AddGroup("Microsoft Edge")
+            If IsAppElevated() Then
+               ' Name | checked | root | key | value
+               ol.AddRegDWord("Default Browser Setting Enabled", True, HKLM, EDGE, "DefaultBrowserSettingEnabled")
+               ol.AddRegDWord("Default Browser Settings Campaign Enabled", True, HKLM, EDGE, "DefaultBrowserSettingsCampaignEnabled")
+               ol.AddRegDWord("Edge Shopping Assistant Enabled", True, HKLM, EDGE, "EdgeShoppingAssistantEnabled")
+               ol.AddRegDWord("Hide First Run Experience", True, HKLM, EDGE, "HideFirstRunExperience")
+               ol.AddRegDWord("New TabPage Content Enabled", True, HKLM, EDGE, "NewTabPageContentEnabled")
+            End If
+         End Sub)
 
       lvApps.Columns(0).Width = -1
       lvApps.Columns(0).Width = lvApps.Columns(0).Width + 30
-      lvApps.EndUpdate()
-   End Sub
-
-   '-----------------------------------------------------------------------------------------------
-   ' Process Actions
-   Private Sub ProcessActions(itemsToProcess As List(Of ListViewItem))
-      For Each item As ListViewItem In itemsToProcess
-         Dim grp = item.Group
-         If grp Is Nothing Then Continue For
-
-         Select Case grp.Header
-
-            Case "Microsoft Edge"
-               Select Case item.Text
-
-                  Case "Default Browser Setting Enabled"
-                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "DefaultBrowserSettingEnabled", 1)
-                     Else ' Cloak
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "DefaultBrowserSettingEnabled", 0)
-                     End If
-                     pbActions.Value += 1
-
-                  Case "Default Browser Settings Campaign Enabled"
-                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "DefaultBrowserSettingsCampaignEnabled", 1)
-                     Else ' Cloak
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "DefaultBrowserSettingsCampaignEnabled", 0)
-                     End If
-                     pbActions.Value += 1
-
-                  Case "Edge Shopping Assistant Enabled"
-                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "EdgeShoppingAssistantEnabled", 1)
-                     Else ' Cloak
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "EdgeShoppingAssistantEnabled", 0)
-                     End If
-                     pbActions.Value += 1
-
-                  Case "Hide First Run Experience"
-                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "HideFirstRunExperience", 1)
-                     Else ' Cloak
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "HideFirstRunExperience", 0)
-                     End If
-                     pbActions.Value += 1
-
-                  Case "New TabPage Content Enabled"
-                     If DirectCast(item.Tag, LV_CheckBoxData).CheckState Then ' Restore default                    
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "NewTabPageContentEnabled", 1)
-                     Else ' Cloak
-                        RegWriteDWord(Registry.LocalMachine, "Software\Policies\Microsoft\Edge", "NewTabPageContentEnabled", 0)
-                     End If
-                     pbActions.Value += 1
-
-               End Select
-         End Select
-      Next
    End Sub
 
    '-----------------------------------------------------------------------------------------------
@@ -107,20 +52,14 @@ Public Class frmApps
       pbActions.Size = New Size(745, 20)
       Me.Controls.Add(pbActions)
 
+      ol = New OptionList(lvApps, pbActions, log)
       BuildOptions()
    End Sub
 
    '-----------------------------------------------------------------------------------------------
    ' btnProcess: OnClick
    Private Sub btnProcess_Click(sender As Object, e As EventArgs) Handles btnAppsRun.Click
-      Dim itemsToProcess As New List(Of ListViewItem)()
-      For Each item As ListViewItem In lvApps.Items
-         If item.Checked AndAlso item.Group IsNot Nothing Then
-            itemsToProcess.Add(item)
-         End If
-      Next
-      pbActions.Maximum = itemsToProcess.Count
-      ProcessActions(itemsToProcess)
+      ol.Run()
    End Sub
 
    'Private Sub frmApps_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
